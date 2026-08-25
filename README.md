@@ -1,5 +1,7 @@
 # dsh-theme-tuner
 
+> [English](README_en.md)
+
 在 DeepSeek Harness (DSH) 的「通用设置 → 外观」下方直接调整界面主题——**强调色 / 背景 / 前景 / 对比度**，实时生效。
 
 > 复用「外观」自带的 **浅色 / 深色 / 跟随系统** 切换，无需重复的切换按钮。

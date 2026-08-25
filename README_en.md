@@ -1,5 +1,7 @@
 # dsh-theme-tuner
 
+> [中文 README](README.md)
+
 Customize the DeepSeek Harness (DSH) interface theme directly under the built-in **Appearance** settings — accent, background, foreground and contrast, applied live.
 
 > Reuses the built-in Appearance **light / dark / system** switch, so there is no duplicate theme toggle.
