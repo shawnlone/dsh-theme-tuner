@@ -4,9 +4,27 @@
 **强调色 / 背景 / 前景 / 对比度** 控件，让你**合并调整**界面配色，而不像参考截图那样把浅色和深色做成两块
 独立的大面板，也不必单独占一个左侧标签页。
 
-界面交互（如参考图的 Codex 风格）：**深浅切换直接复用上方「外观」里的 浅色 / 深色 / 跟随系统**，
+页面交互（如参考图的 Codex 风格）：**深浅切换直接复用上方「外观」里的 浅色 / 深色 / 跟随系统**，
 「主题定制」会按当前主题调整。两套配色（浅色、深色）分别保存；<b>对比度</b>会以当前主题为基准微调前景文字的
 “清晰度”（值越大越接近纯黑/纯白，值越小越接近背景，越柔和）。
+
+## 功能
+
+- 放在「通用设置 → 外观」正下方，合并调整 **强调色 / 背景 / 前景 / 对比度**。
+- 深浅（以及跟随系统）切换**复用「外观」**，无需重复的切换按钮；按当前主题调整。
+- 浅色、深色两套配色**分别保存**；对比度按当前主题微调前景清晰度。
+- 改动**实时生效**（`theme.overrideTokens` 写入 `--dsw-alias-*`），可随时**恢复当前主题默认**。
+
+## 安装（从本仓库）
+
+```sh
+# 用官方 CLI 从 GitHub 安装（web profile 需已初始化）
+dsh plugin --profile web add github:shawnlone/dsh-theme-customizer
+```
+
+> 本仓库是「仓库根即插件包」：`package.json` 声明了 `dsh.bundle.patch`（安装入口）
+> 与 `dsh.client`（浏览器端 UI），仓库根放有 `cordis.patch.yml`。
+> **新增插件需重启一次对应的 web profile** 才会生效。
 
 ## 原理
 
@@ -20,18 +38,20 @@
 ## 目录结构
 
 ```
-theme-customizer/
+dsh-theme-customizer/
   package.json          # 双面插件清单：dsh.client + dsh.bundle.patch
   cordis.patch.yml      # 作为 bundle 挂载时的插件行（insert）
+  LICENSE               # MIT
+  CHANGELOG.md
   README.md
   scripts/
     install.ps1         # 一键安装到 web profile（备份 + dsh plugin add + 提示重启）
     install.sh          # macOS/Linux 等同款安装脚本
   lib/
     index.js            # 主机半区：注册 theme-customizer 设置命名空间 + schema
-    client.js           # 浏览器半区：设置页 UI + token 应用（可直接部署的 bundle）
+    client.js           # 浏览器半区：设置行 UI + token 应用（可直接部署的 bundle）
     types/              # 类型声明（供 TS 消费方使用）
-  preview.html          # 独立预览（仓库根目录），本插件效果的可视化 Demo
+  preview.html          # 独立预览，本插件效果的可视化 Demo
 ```
 
 ## 一键安装（推荐）
