@@ -255,9 +255,6 @@
 
       <!-- Theme customizer: sits directly under Appearance -->
       <div class="customizer">
-      <div class="customizer-head">
-        <span class="customizer-current" id="currentTheme">当前主题：浅色</span>
-      </div>
 
       <!-- Accent / Background / Foreground (one row) -->
       <div class="color-grid">
@@ -500,7 +497,6 @@
     document.getElementById("fgHex").textContent = fgBase.toUpperCase();
     document.getElementById("contrastVal").textContent = contrast;
     document.getElementById("tagContrast").textContent = contrast;
-    document.getElementById("currentTheme").textContent = "当前主题：" + (state.mode === "dark" ? "深色" : "浅色");
     document.getElementById("contrast").style.setProperty("--fill", contrast + "%");
   }
 
