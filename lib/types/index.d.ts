@@ -1,4 +1,4 @@
-/** dsh-theme-customizer host entry (host half). */
+/** dsh-theme-tuner host entry (host half). */
 export interface CustomizerFieldSchema {
   accent: string;
   bg: string;
@@ -6,5 +6,5 @@ export interface CustomizerFieldSchema {
   contrast: number;
 }
 
-/** Host plugin body: registers the "theme-customizer" settings namespace. */
+/** Host plugin body: registers the "theme-tuner" settings namespace. */
 export function apply(ctx: unknown): void;

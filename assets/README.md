@@ -8,8 +8,8 @@ Add one or more PNG screenshots here and reference them in the market's
 
 ```jsonc
 {
-  "https://github.com/shawnlone/dsh-theme-customizer": [
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-customizer/main/assets/screenshot.png"
+  "https://github.com/shawnlone/dsh-theme-tuner": [
+    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot.png"
   ]
 }
 ```

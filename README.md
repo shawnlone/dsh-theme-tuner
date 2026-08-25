@@ -1,4 +1,4 @@
-# dsh-theme-customizer
+# dsh-theme-tuner
 
 一个针对 DeepSeek Harness (DSH) 的 Web 客户端插件：在**「通用设置 → 外观」下方**直接追加一组
 **强调色 / 背景 / 前景 / 对比度** 控件，让你**合并调整**界面配色，而不像参考截图那样把浅色和深色做成两块
@@ -19,7 +19,7 @@
 
 ```sh
 # 用官方 CLI 从 GitHub 安装（web profile 需已初始化）
-dsh plugin --profile web add github:shawnlone/dsh-theme-customizer
+dsh plugin --profile web add github:shawnlone/dsh-theme-tuner
 ```
 
 > 本仓库是「仓库根即插件包」：`package.json` 声明了 `dsh.bundle.patch`（安装入口）
@@ -28,7 +28,7 @@ dsh plugin --profile web add github:shawnlone/dsh-theme-customizer
 
 ## 截图
 
-![theme-customizer 在 DSH 设置里](assets/screenshot.png)
+![theme-tuner 在 DSH 设置里](assets/screenshot.png)
 
 > 上图是「通用设置 → 外观 → 主题定制」的界面截图（深色主题）。
 > 该图同时用于插件市场（`data/screenshots.json`）的详情展示。
@@ -39,13 +39,13 @@ dsh plugin --profile web add github:shawnlone/dsh-theme-customizer
   - 强调色：`--dsw-alias-brand-primary`、`--dsw-alias-button-primary-fill`、`--dsw-alias-state-business-primary`
   - 背景：`--dsw-alias-bg-base`、`--dsw-alias-bg-layer-1/2/3`、`--dsw-specific-sidebar-fill`
   - 前景：`--dsw-alias-label-primary/secondary/tertiary`（由所选前景色 + 对比度自动推导）
-- 通过 `settingsScope.bind({ namespace: "theme-customizer" })` 读取/写入 **主机设置文档**，实现持久化。
-- 通过 `settings.general.item` 插槽注册一行（id `theme-customizer`，order 15），排在「外观」（order 10）正下方。
+- 通过 `settingsScope.bind({ namespace: "theme-tuner" })` 读取/写入 **主机设置文档**，实现持久化。
+- 通过 `settings.general.item` 插槽注册一行（id `theme-tuner`，order 15），排在「外观」（order 10）正下方。
 
 ## 目录结构
 
 ```
-dsh-theme-customizer/
+dsh-theme-tuner/
   package.json          # 双面插件清单：dsh.client + dsh.bundle.patch
   cordis.patch.yml      # 作为 bundle 挂载时的插件行（insert）
   LICENSE               # MIT
@@ -55,7 +55,7 @@ dsh-theme-customizer/
     install.ps1         # 一键安装到 web profile（备份 + dsh plugin add + 提示重启）
     install.sh          # macOS/Linux 等同款安装脚本
   lib/
-    index.js            # 主机半区：注册 theme-customizer 设置命名空间 + schema
+    index.js            # 主机半区：注册 theme-tuner 设置命名空间 + schema
     client.js           # 浏览器半区：设置行 UI + token 应用（可直接部署的 bundle）
     types/              # 类型声明（供 TS 消费方使用）
   preview.html          # 独立预览，本插件效果的可视化 Demo
@@ -68,7 +68,7 @@ pwsh -File .\scripts\install.ps1
 ```
 
 脚本会：备份 `profile/package.json` → 先尝试官方 `dsh plugin --profile web add link:<本目录>`（内部用 pnpm 安装并把
-`dsh-theme-customizer` 追加到 `dsh.profile.bundles`）。
+`dsh-theme-tuner` 追加到 `dsh.profile.bundles`）。
 
 > 若官方 pnpm 路径被 profile 的供应链策略（`minimumReleaseAge`）拦截（常见、且多为既有状态），
 > 脚本会自动回退到**本地 junction 安装**（不走 pnpm / 网络）：在 `profile/node_modules` 下 junction 插件目录、
@@ -80,7 +80,7 @@ pwsh -File .\scripts\install.ps1
 
 ### 本机当前状态
 已在 `~/.dsh/profiles/web` 完成安装（junction + `dsh.profile.bundles`），并已用 profile 的 boot 组合
-（`loadProfile` + `composeEntries`）验证：`theme-customizer -> dsh-theme-customizer` 行已进入组合后的条目列表、
+（`loadProfile` + `composeEntries`）验证：`theme-tuner -> dsh-theme-tuner` 行已进入组合后的条目列表、
 host 依赖解析成功。**重启一次 DSH 即可在设置里看到「主题定制」。**
 
 ## 安装到运行中的 DSH
@@ -91,7 +91,7 @@ host 依赖解析成功。**重启一次 DSH 即可在设置里看到「主题�
 方式一（官方 CLI，适合已发布/可解析的包）：
 
 ```sh
-dsh plugin --profile web add dsh-theme-customizer
+dsh plugin --profile web add dsh-theme-tuner
 ```
 
 方式二（本地开发，link 到本目录）：
@@ -99,7 +99,7 @@ dsh plugin --profile web add dsh-theme-customizer
 ```sh
 # 在 web profile 目录
 cd "$DSH_HOME/profiles/web"
-pnpm add link:D:/VSC_Projects/dsh-theme-customizer
+pnpm add link:D:/VSC_Projects/dsh-theme-tuner
 ```
 
 然后把包名加入 `$DSH_HOME/profiles/web/package.json` 的 `dsh.profile.bundles`（追加到末尾），
@@ -107,8 +107,8 @@ pnpm add link:D:/VSC_Projects/dsh-theme-customizer
 
 ```yaml
 - insert:
-    - id: theme-customizer
-      name: 'dsh-theme-customizer'
+    - id: theme-tuner
+      name: 'dsh-theme-tuner'
 ```
 
 ## 退出/禁用

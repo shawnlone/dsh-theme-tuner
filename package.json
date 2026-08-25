@@ -1,5 +1,5 @@
 {
-  "name": "dsh-theme-customizer",
+  "name": "dsh-theme-tuner",
   "version": "0.1.0",
   "description": "DSH web plugin: theme customization placed under the built-in Appearance (外观) settings. It reuses the Appearance light/dark switch and lets you adjust accent / background / foreground / contrast for the active theme, applied live through DSH theme token overrides.",
   "type": "module",
@@ -44,18 +44,18 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shawnlone/dsh-theme-customizer.git"
+    "url": "git+https://github.com/shawnlone/dsh-theme-tuner.git"
   },
-  "homepage": "https://github.com/shawnlone/dsh-theme-customizer",
+  "homepage": "https://github.com/shawnlone/dsh-theme-tuner",
   "bugs": {
-    "url": "https://github.com/shawnlone/dsh-theme-customizer/issues"
+    "url": "https://github.com/shawnlone/dsh-theme-tuner/issues"
   },
   "keywords": [
     "deepseek-harness",
     "dsh",
     "dsh-plugin",
     "theme",
-    "theme-customizer",
+    "theme-tuner",
     "appearance",
     "plugin"
   ],

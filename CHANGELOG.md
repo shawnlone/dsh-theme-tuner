@@ -9,7 +9,7 @@ customize the interface theme right under Settings → 通用设置 → 外观 (
   applied live through `theme.overrideTokens` (`--dsw-alias-*` CSS variables).
 - Reuses the built-in **外观** light / dark / system switch (no duplicate
   theme toggle); the customizer targets whichever theme is active.
-- Persists per-scheme (light & dark) settings via the `theme-customizer`
+- Persists per-scheme (light & dark) settings via the `theme-tuner`
   settings namespace.
 - Ships a host half (`lib/index.js`, registers the settings namespace) and a
   browser half (`lib/client.js`, the settings row + token application), plus a

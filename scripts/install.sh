@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — wire dsh-theme-customizer into the DSH "web" profile (macOS/Linux).
+# install.sh — wire dsh-theme-tuner into the DSH "web" profile (macOS/Linux).
 # Mirrors scripts/install.ps1. Adding a new plugin requires a profile restart.
 set -euo pipefail
 
@@ -13,8 +13,8 @@ if [[ ! -f "$PROFILE_DIR/package.json" ]]; then
 fi
 
 MANIFEST="$PROFILE_DIR/package.json"
-cp "$MANIFEST" "$MANIFEST.dsh-theme-customizer.bak"
-echo "Backed up profile manifest -> $MANIFEST.dsh-theme-customizer.bak"
+cp "$MANIFEST" "$MANIFEST.dsh-theme-tuner.bak"
+echo "Backed up profile manifest -> $MANIFEST.dsh-theme-tuner.bak"
 
 if command -v dsh >/dev/null 2>&1; then
   echo "Installing via: dsh plugin --profile web add link:$PLUGIN_DIR"
@@ -28,4 +28,4 @@ fi
 
 echo ""
 echo "Install prepared. RESTART the DSH web profile to see the '主题定制' settings page."
-echo "To uninstall: dsh plugin --profile web remove dsh-theme-customizer"
+echo "To uninstall: dsh plugin --profile web remove dsh-theme-tuner"
