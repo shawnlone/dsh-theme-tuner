@@ -26,6 +26,13 @@ dsh plugin --profile web add github:shawnlone/dsh-theme-customizer
 > 与 `dsh.client`（浏览器端 UI），仓库根放有 `cordis.patch.yml`。
 > **新增插件需重启一次对应的 web profile** 才会生效。
 
+## 截图
+
+![theme-customizer 在 DSH 设置里](assets/screenshot.png)
+
+> 上图是「通用设置 → 外观 → 主题定制」的界面截图（深色主题）。
+> 该图同时用于插件市场（`data/screenshots.json`）的详情展示。
+
 ## 原理
 
 - 通过 DSH 的 `theme` 服务调用 `overrideTokens(source, tokens)`，把自定义值写入 `--dsw-alias-*` 等 CSS 变量：
