@@ -5,6 +5,9 @@ node_modules/
 # Local install machinery (junctions to the dsh installation — machine-specific)
 scripts/*.bak
 
+# Working artifacts for the awesome-dsh-plugin list PR (not part of the plugin)
+contrib/
+
 # Backup files
 *.bak
 *.orig
