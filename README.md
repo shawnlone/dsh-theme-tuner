@@ -1,54 +1,50 @@
 # dsh-theme-tuner
 
-Customize the DeepSeek Harness (DSH) interface theme right under the built-in **外观 (Appearance)** settings — accent, background, foreground and contrast, applied live.
+在 DeepSeek Harness (DSH) 的「通用设置 → 外观」下方直接调整界面主题——**强调色 / 背景 / 前景 / 对比度**，实时生效。
 
-> **主题微调**：在 DSH 的「通用设置 → 外观」下方，直接调整界面配色。
-> Note: this plugin reuses the built-in Appearance light / dark / system switch.
+> 复用「外观」自带的 **浅色 / 深色 / 跟随系统** 切换，无需重复的切换按钮。
 
-![dsh-theme-tuner in DSH settings](assets/screenshot.png)
+![dsh-theme-tuner 在 DSH 设置里](assets/screenshot.png)
 
-## Features
+## 功能
 
-- Sits directly under **通用设置 → 外观**, adjusting **accent / background / foreground / contrast**.
-- Reuses the built-in **外观** light / dark / system switch — no duplicate toggle — and tunes the **active** theme.
-- Keeps the light and dark palettes **separately**; the contrast slider softens or sharpens foreground text per theme.
-- Applies **live** via DSH `theme.overrideTokens` (`--dsw-alias-*`), with a **reset to the current theme default**.
+- 挂在「通用设置 → 外观」正下方，调整 **强调色 / 背景 / 前景 / 对比度**。
+- 复用「外观」的 浅色 / 深色 / 跟随系统 切换，针对**当前激活主题**调整。
+- 浅色、深色两套配色**分别保存**；对比度按当前主题微调前景文字的清晰度。
+- 改动**实时生效**（`theme.overrideTokens` 写入 `--dsw-alias-*` 设计变量），可一键**恢复当前主题默认**。
 
-## Install
+## 安装
 
 ```sh
 dsh plugin --profile web add github:shawnlone/dsh-theme-tuner
 ```
 
-> This repo is structured so the **repo root is the plugin package**: `package.json` declares
-> `dsh.bundle.patch` (the install entry) and `dsh.client` (browser UI), with `cordis.patch.yml` at the root.
-> A new plugin needs a **profile restart** to take effect. A `scripts/install.ps1` / `install.sh` helper
-> (with a local-junction fallback for a pnpm supply-chain policy) is also provided.
+> 本仓库按「仓库根即插件包」组织：`package.json` 声明了 `dsh.bundle.patch`（安装入口）与 `dsh.client`（浏览器端 UI），根目录放置 `cordis.patch.yml`。
+> 新增插件需 **重启一次对应的 web profile** 才会生效。另提供 `scripts/install.ps1` / `scripts/install.sh` 一键脚本（内含 pnpm 供应链策略无法通过时的本地 junction 安装回退）。
 
-## How it works
+## 原理
 
-The plugin writes to DSH's design tokens:
+插件通过 `theme.overrideTokens` 把自定义值写入 DSH 的设计 token：
 
-- **accent** → `--dsw-alias-brand-primary` / `--dsw-alias-button-primary-fill` / `--dsw-alias-state-business-primary`
-- **background** → `--dsw-alias-bg-base` / `--dsw-alias-bg-layer-1/2/3` / `--dsw-specific-sidebar-fill`
-- **foreground** → `--dsw-alias-label-primary/secondary/tertiary` (derived from foreground + contrast)
+- **强调色**：`--dsw-alias-brand-primary` / `--dsw-alias-button-primary-fill` / `--dsw-alias-state-business-primary`
+- **背景**：`--dsw-alias-bg-base` / `--dsw-alias-bg-layer-1/2/3` / `--dsw-specific-sidebar-fill`
+- **前景**：`--dsw-alias-label-primary/secondary/tertiary`（由所选前景色 + 对比度自动推导）
 
-Settings persist through the `theme-tuner` settings namespace. The row registers into
-`settings.general.item` (order 15), directly under the built-in 外观 (order 10).
+设置经 `theme-tuner` 命名空间持久化；设置行注册到 `settings.general.item`（order 15），排在「外观」（order 10）正下方。
 
-## Structure
+## 目录结构
 
 ```
 dsh-theme-tuner/
-  package.json          # dual-face manifest: dsh.client + dsh.bundle.patch
-  cordis.patch.yml      # bundle mount row (insert)
-  lib/index.js          # host half: registers the theme-tuner settings namespace
-  lib/client.js         # browser half: settings row + live token application
+  package.json          # 双面插件清单：dsh.client + dsh.bundle.patch
+  cordis.patch.yml      # bundle 挂载行 (insert)
+  lib/index.js          # 主机半区：注册 theme-tuner 设置命名空间 + schema
+  lib/client.js         # 浏览器半区：设置行 UI + 实时 token 应用
   scripts/              # install.ps1 / install.sh
-  preview.html          # standalone demo
-  assets/               # screenshots for the plugin market
+  preview.html          # 独立效果演示
+  assets/               # 文档 / 插件市场截图
 ```
 
-## License
+## 许可证
 
 [MIT](LICENSE)
