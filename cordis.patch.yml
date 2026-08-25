@@ -1,0 +1,20 @@
+# dsh-theme-customizer bundle patch
+#
+# When installed via the official CLI —
+#
+#   dsh plugin --profile web add dsh-theme-customizer
+#
+# — the command reconciles `dsh.profile.bundles` against installed packages and,
+# seeing this declaration, appends `dsh-theme-customizer` to the bundle stack.
+# The profile boot then merges THIS patch (a single `insert` of the plugin row)
+# like any other bundle.
+#
+# Alternative manual install for a locally developed package — add the package as
+# a dependency of the web profile (e.g. `pnpm add link:<path>`, or `file:`), then
+# either append it to `dsh.profile.bundles` in
+# `$DSH_HOME/profiles/web/package.json` OR add the row below to
+# `$DSH_HOME/profiles/web/cordis.patch.yml`. A new plugin only takes effect after
+# a profile restart (client-modules caches plugin-set metadata)
+- insert:
+    - id: theme-customizer
+      name: 'dsh-theme-customizer'

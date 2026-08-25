@@ -1,0 +1,536 @@
+<!doctype html>
+<!--
+  Theme Customizer — 初版预览 (standalone proof-of-concept)
+
+  This file is a self-contained, turnkey PREVIEW of the DSH plugin I'm building
+  (working name "theme-customizer"). It lets you see the initial version's look
+  and behavior immediately, without installing anything into the running DSH:
+
+    * ONE combined panel (theme is switched first, then that theme is adjusted),
+      instead of the two separate light/dark cards in the reference screenshot.
+    * 强调色 (accent) / 背景 (background) / 前景 (foreground) color pickers.
+    * 对比度 (contrast) slider that visibly sharpens/softens text vs. background.
+
+  The palette below mirrors DSH's `--dsw-static-neutral-bluish-*` ramp and the
+  CSS custom-property contract the real plugin drives via `theme.overrideTokens`
+  (--dsw-alias-bg-base, --dsw-alias-brand-primary / -state-business-primary,
+  --dsw-alias-label-primary, ...).
+
+  The actual DSH plugin lives in this repo (dsh-theme-customizer) and is
+  installable via `dsh plugin --profile web add link:D:/VSC_Projects/dsh-theme-customizer`.
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>主题定制 · 初版预览 (Theme Customizer Preview)</title>
+<style>
+  :root {
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+            "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica,
+            Arial, sans-serif;
+    --mono: "SF Mono", "JetBrains Mono", "Fira Code", Consolas, "Menlo", monospace;
+    --dur: .2s;
+    --ease: cubic-bezier(.4, 0, .2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: #1b1b1c;                 /* dark page chrome (see the dark preview panel) */
+    color: #e8eaef;
+    min-height: 100vh;
+    padding: 28px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page { max-width: 1180px; margin: 0 auto; }
+
+  .page-head { margin-bottom: 20px; }
+  .page-head h1 { font-size: 20px; font-weight: 600; letter-spacing: .2px; }
+  .page-head p  { font-size: 13px; color: #9aa0a6; margin-top: 6px; line-height: 1.6; }
+
+  /* ------------------------------------------------ layout */
+  .workspace { display: grid; grid-template-columns: 360px 1fr; gap: 24px; align-items: start; }
+
+  .panel {
+    background: #232324;
+    border: 1px solid #ffffff12;
+    border-radius: 14px;
+    padding: 18px 20px 22px;
+  }
+
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding-bottom: 14px; border-bottom: 1px solid #ffffff12; margin-bottom: 4px;
+  }
+  .panel-title { font-size: 14px; font-weight: 600; }
+  .panel-sub  { font-size: 12px; color: #9aa0a6; margin-top: 2px; }
+
+  .seg {
+    display: inline-flex; gap: 4px; padding: 3px;
+    background: #2c2c2e; border-radius: 9px;
+  }
+  .seg button {
+    appearance: none; border: 0; background: transparent; cursor: pointer;
+    color: #adb2b8; font: 500 13px/1 var(--font);
+    padding: 7px 12px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;
+    transition: color .15s var(--ease), background .15s var(--ease);
+  }
+  .seg button[aria-pressed="true"] { background: #ffffff1a; color: #f1f3f5; }
+
+  .row {
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    padding: 16px 0; border-bottom: 1px solid #ffffff0d;
+  }
+  .row:last-child { border-bottom: 0; }
+  .row-label { min-width: 76px; font-size: 13px; color: #cfd3d6; }
+
+  .customizer-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 18px 0 2px; margin-top: 6px; border-top: 1px solid #ffffff12;
+  }
+  .customizer-title { font-size: 14px; font-weight: 600; }
+  .customizer-current { font-size: 12px; color: #9aa0a6; }
+
+  .swatch {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 10px;
+    min-width: 174px; padding: 5px 6px; border-radius: 9px;
+    background: #2c2c2e; border: 1px solid #ffffff10; cursor: pointer;
+    transition: border-color .15s var(--ease);
+  }
+  .swatch:hover { border-color: #ffffff26; }
+  .swatch__dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid #ffffff2e; background: #fff; flex: none;
+    background-image: linear-gradient(45deg, #cfd3d6 25%, transparent 25%, transparent 75%, #cfd3d6 75%),
+                      linear-gradient(45deg, #cfd3d6 25%, transparent 25%, transparent 75%, #cfd3d6 75%);
+    background-size: 7px 7px; background-position: 0 0, 3px 3px;
+  }
+  .swatch__dot > i { display:block; width:100%; height:100%; border-radius:50%;
+    border: 1px solid #00000014; }
+  .swatch__hex { font: 400 12.5px var(--mono); color: #e8eaef; letter-spacing: .4px; }
+  /* Invisible color-input overlay keeps the native picker anchored to the
+     swatch (display:none would open it at the viewport top-left). */
+  .swatch input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer; border: 0; background: transparent; padding: 0; margin: 0;
+  }
+
+  .slider-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 0; }
+  .slider-wrap { display: flex; align-items: center; gap: 14px; flex: 1; }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none; flex: 1; height: 4px; border-radius: 999px;
+    background: linear-gradient(to right, #4d93f8 var(--fill, 50%), #43454a var(--fill, 50%));
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%;
+    background: #f1f3f5; border: 0; cursor: pointer; box-shadow: 0 1px 3px #0006;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px; border-radius: 50%; background: #f1f3f5; border: 0; cursor: pointer;
+  }
+  .slider-val { font: 500 13px var(--mono); color: #e8eaef; min-width: 30px; text-align: right; }
+
+  .hint { font-size: 12px; color: #81858c; line-height: 1.6; margin-top: 6px; }
+  .presets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .preset {
+    appearance: none; border: 1px solid #ffffff14; background: #2c2c2e; color: #cfd3d6;
+    font: 500 12px var(--font); padding: 6px 11px; border-radius: 7px; cursor: pointer;
+    transition: border-color .15s var(--ease);
+  }
+  .preset:hover { border-color: #ffffff2e; }
+
+  .preview {
+    border: 1px solid #ffffff12; border-radius: 14px; overflow: hidden;
+    background: #151517;
+  }
+
+  /* The live-theme root: every color below derives from the three custom props
+     + contrast, the same contract the real plugin drives via overrideTokens. */
+  .preview-theme {
+    --bg:#151517; --accent:#2d99ff; --fg:#f1f3f5;
+    --fg2:#cfd3d6; --fg3:#81858c; --layer1:#232324; --layer2:#2c2c2e;
+    --border:#ffffff12; --on-accent:#0f1115;
+    background: var(--bg); color: var(--fg);
+    min-height: 560px; display: flex; flex-direction: column;
+    font-size: 14px;
+  }
+
+  .app-top {
+    display: flex; align-items: center; gap: 14px; padding: 10px 16px;
+    border-bottom: 1px solid var(--border); background: var(--layer1);
+  }
+  .app-top .brand { font-size: 13px; font-weight: 600; letter-spacing: .3px; }
+  .crumb { font-size: 12px; color: var(--fg3); }
+
+  .app-body { display: grid; grid-template-columns: 220px 1fr; flex: 1; }
+  .app-side {
+    background: var(--layer1); border-right: 1px solid var(--border); padding: 12px 10px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .side-item {
+    display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px;
+    font-size: 13px; color: var(--fg2);
+  }
+  .side-item.active { background: var(--layer2); color: var(--fg); }
+  .side-item .dot { width: 8px; height: 8px; border-radius: 3px; background: var(--fg3); }
+  .side-item.active .dot { background: var(--accent); }
+
+  .app-main { padding: 18px 20px; overflow: hidden; }
+  .composer-pill {
+    display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 12px;
+    background: var(--layer1); border: 1px solid var(--border); margin-bottom: 16px;
+    font-size: 13px; color: var(--fg3);
+  }
+  .composer-pill .model {
+    font-size: 12px; padding: 3px 9px; border-radius: 6px; background: var(--layer2);
+    color: var(--fg2); margin-left: auto;
+  }
+
+  .bubble { max-width: 78%; padding: 12px 15px; border-radius: 14px; margin-bottom: 12px; line-height: 1.65; }
+  .bubble.user { margin-left: auto; background: var(--accent); color: var(--on-accent); font-size: 13.5px; }
+  .bubble.assistant { background: var(--layer1); border: 1px solid var(--border); font-size: 13.5px; }
+  .bubble.assistant .muted { color: var(--fg3); font-size: 12px; margin-bottom: 6px; }
+  .bubble a { color: var(--accent); }
+  .bubble code {
+    font-family: var(--mono); font-size: 12.5px; background: var(--layer2);
+    padding: 1px 5px; border-radius: 5px; color: var(--fg);
+  }
+
+  .accent-btn {
+    appearance: none; border: 0; cursor: pointer; font: 600 13px var(--font);
+    background: var(--accent); color: var(--on-accent);
+    padding: 8px 14px; border-radius: 9px;
+  }
+  .ghost-btn {
+    appearance: none; border: 1px solid var(--border); cursor: pointer; font: 500 12px var(--font);
+    background: var(--layer2); color: var(--fg2); padding: 8px 13px; border-radius: 9px;
+  }
+  .btn-row { display: flex; gap: 9px; margin-top: 4px; }
+  .tag { font-size: 11.5px; color: var(--accent); background: var(--layer2); padding: 2px 8px; border-radius: 5px; }
+
+  @media (max-width: 940px) { .workspace { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="page-head">
+    <h1>主题定制 · 初版预览</h1>
+    <p>
+      与 DSH 实际布局一致：<b>「外观」里切换主题（浅色 / 深色），「主题定制」紧跟在下方</b>，按当前主题调整
+      强调色 · 背景 · 前景 · 对比度。右侧是可实时预览的对话界面。调色板与 CSS 变量契约和接入 DSH 的插件一致。
+    </p>
+  </div>
+
+  <div class="workspace">
+    <!-- ============ SETTINGS PANEL ============ -->
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">通用设置</div>
+          <div class="panel-sub">外观 → 主题定制（深浅切换复用「外观」）</div>
+        </div>
+      </div>
+
+      <!-- 外观 row: owns the light/dark theme switch -->
+      <div class="row">
+        <span class="row-label">外观</span>
+        <div class="seg" id="themeSeg" role="group" aria-label="主题">
+          <button type="button" data-mode="light" aria-pressed="true">浅色</button>
+          <button type="button" data-mode="dark" aria-pressed="false">深色</button>
+        </div>
+      </div>
+
+      <!-- Theme customizer: sits directly under Appearance -->
+      <div class="customizer-head">
+        <span class="customizer-title">主题定制</span>
+        <span class="customizer-current" id="currentTheme">当前主题：浅色</span>
+      </div>
+
+      <!-- Accent -->
+      <div class="row">
+        <span class="row-label">强调色</span>
+        <label class="swatch">
+          <span class="swatch__dot"><i id="accentDot"></i></span>
+          <span class="swatch__hex" id="accentHex">#339CFF</span>
+          <input type="color" id="accent" value="#339CFF" />
+        </label>
+      </div>
+
+      <!-- Background -->
+      <div class="row">
+        <span class="row-label">背景</span>
+        <label class="swatch">
+          <span class="swatch__dot"><i id="bgDot"></i></span>
+          <span class="swatch__hex" id="bgHex">#FFFFFF</span>
+          <input type="color" id="bg" value="#FFFFFF" />
+        </label>
+      </div>
+
+      <!-- Foreground -->
+      <div class="row">
+        <span class="row-label">前景</span>
+        <label class="swatch">
+          <span class="swatch__dot"><i id="fgDot"></i></span>
+          <span class="swatch__hex" id="fgHex">#1A1C1F</span>
+          <input type="color" id="fg" value="#1A1C1F" />
+        </label>
+      </div>
+
+      <!-- Contrast -->
+      <div class="slider-row">
+        <span class="row-label">对比度</span>
+        <div class="slider-wrap">
+          <input type="range" id="contrast" min="0" max="100" value="45" />
+          <span class="slider-val" id="contrastVal">45</span>
+        </div>
+      </div>
+
+      <p class="hint">
+        对比度控制前景相对背景的“清晰程度”：
+        值越大，文字越接近纯黑（浅色主题）/ 纯白（深色主题），可读性越强；
+        值越小，文字越接近背景色，整体越柔和。初版对深色主题默认 28、浅色主题默认 45。
+      </p>
+
+      <div class="presets">
+        <button class="preset" data-mode="light">恢复浅色默认</button>
+        <button class="preset" data-mode="dark">恢复深色默认</button>
+      </div>
+    </div>
+
+    <!-- ============ LIVE PREVIEW ============ -->
+    <div class="preview">
+      <div class="preview-theme" id="previewTheme">
+        <div class="app-top">
+          <span class="brand">Codex 风格主题预览</span>
+          <span class="crumb">dsh-theme-customizer / 主题定制初版</span>
+        </div>
+        <div class="app-body">
+          <div class="app-side">
+            <div class="side-item active"><span class="dot"></span>会话</div>
+            <div class="side-item"><span class="dot"></span>文件</div>
+            <div class="side-item"><span class="dot"></span>构建</div>
+            <div class="side-item"><span class="dot"></span>设置</div>
+            <div class="btn-row" style="margin-left:4px;"><button class="ghost-btn">+ 新建</button></div>
+          </div>
+          <div class="app-main">
+            <div class="composer-pill">
+              在 DSH 中按需开发插件… <span class="model">deepseek-v4-flash-vision-exp</span>
+            </div>
+
+            <div class="bubble user">
+              你可以开发DSH插件吗？我想做一个类似 Codex 那样可调节界面整体背景色和对比度的主题定制。
+            </div>
+
+            <div class="bubble assistant">
+              <div class="muted">助手 · 刚刚</div>
+              可以。初版提供 <b>强调色 · 背景 · 前景 · 对比度</b> 四组控制，并把浅/深两个主题合并成一个面板，
+              <b>先切换主题、再针对性调整</b>。例如：<code>--dsw-alias-brand-primary</code> 控制强调色，
+              <code>--dsw-alias-bg-base</code> 控制背景，<code>--dsw-alias-label-primary</code> 控制前景文字。
+              <div class="btn-row" style="margin-top:10px;">
+                <button class="accent-btn">应用主题</button>
+                <button class="ghost-btn">复制主题</button>
+                <span class="tag">对比度 <span id="tagContrast">45</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Per-theme default palette (matches the reference screenshot). */
+  var DEFAULTS = {
+    light: { accent: "#339CFF", bg: "#FFFFFF", fg: "#1A1C1F", contrast: 45 },
+    dark:  { accent: "#2D99FF", bg: "#262626", fg: "#D1D1D1", contrast: 28 }
+  };
+
+  /* ------------------------- color utilities ------------------------- */
+  function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+  function hexToRgb(hex) {
+    hex = hex.replace("#", "");
+    if (hex.length === 3) hex = hex.split("").map(function (c) { return c + c; }).join("");
+    var n = parseInt(hex, 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+  function rgbToHex(r, g, b) {
+    return "#" + [r, g, b].map(function (v) {
+      return ("0" + Math.round(clamp(v, 0, 255)).toString(16)).slice(-2);
+    }).join("").toUpperCase();
+  }
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+      var d = max - min;
+      s = l > .5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        default: h = (r - g) / d + 4;
+      }
+      h /= 6;
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 };
+  }
+  function hslToRgb(h, s, l) {
+    h /= 360; s /= 100; l /= 100;
+    var r, g, b;
+    if (s === 0) { r = g = b = l; }
+    else {
+      var hue2rgb = function (p, q, t) {
+        if (t < 0) t += 1; if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      var q = l < .5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+    return { r: r * 255, g: g * 255, b: b * 255 };
+  }
+  function hexToHsl(hex) { var c = hexToRgb(hex); return rgbToHsl(c.r, c.g, c.b); }
+  function hslToHex(h, s, l) { var c = hslToRgb(h, s, l); return rgbToHex(c.r, c.g, c.b); }
+
+  function mixHsl(aHex, bHex, t) {
+    var a = hexToHsl(aHex), b = hexToHsl(bHex);
+    var dh = b.h - a.h;
+    if (dh > 180) dh -= 360; else if (dh < -180) dh += 360;
+    return hslToHex(a.h + dh * t, a.s + (b.s - a.s) * t, a.l + (b.l - a.l) * t);
+  }
+
+  /* Contrast: at each scheme's reference contrast (45 light / 28 dark) the
+     foreground is shown exactly as picked. Raising contrast blends it toward
+     the scheme's "extreme" (pure black in light, pure white in dark) => crisper;
+     lowering it blends toward the background => softer. */
+  var REF = { light: 45, dark: 28 };
+  function effectiveFg(fg, bg, mode, contrast) {
+    var extreme = mode === "dark" ? "#FFFFFF" : "#000000";
+    var k = clamp((contrast - REF[mode]) / 50, -1, 1);
+    if (k >= 0) return mixHsl(fg, extreme, k);
+    return mixHsl(fg, bg, -k);
+  }
+
+  /* Apply everything to the live preview root. */
+  var preview = document.getElementById("previewTheme");
+  var state = {
+    mode: "light",
+    light: Object.assign({}, DEFAULTS.light),
+    dark: Object.assign({}, DEFAULTS.dark)
+  };
+
+  function derive(fg, bg, mode) {
+    // secondary/tertiary step toward the BACKGROUND (correct hierarchy)
+    var fg2 = mixHsl(fg, bg, .28);
+    var fg3 = mixHsl(fg, bg, .50);
+    var layer1 = mode === "dark" ? mixHsl(bg, "#FFFFFF", .05) : mixHsl(bg, "#000000", .028);
+    var layer2 = mode === "dark" ? mixHsl(bg, "#FFFFFF", .09) : mixHsl(bg, "#000000", .055);
+    var border = mode === "dark" ? "#ffffff12" : "#00000012";
+    var onAcct = onAccent(accentEl(), mode);
+    return { fg2: fg2, fg3: fg3, layer1: layer1, layer2: layer2, border: border, onAccent: onAcct };
+  }
+
+  function onAccent(hex, mode) {
+    var w = contrastRatio(hex, "#ffffff"), d = contrastRatio(hex, "#0f1115");
+    return w >= d ? "#ffffff" : "#0f1115";
+  }
+  function contrastRatio(a, b) {
+    var l1 = luminance(a), l2 = luminance(b);
+    var hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + .05) / (lo + .05);
+  }
+  function accentEl() { return state[state.mode].accent; }
+
+  function luminance(hex) {
+    var c = hexToRgb(hex);
+    var f = function (v) {
+      v /= 255;
+      return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4);
+    };
+    return .2126 * f(c.r) + .7152 * f(c.g) + .0722 * f(c.b);
+  }
+
+  function render() {
+    var cfg = state[state.mode];
+    var accent = cfg.accent, bg = cfg.bg, fgBase = cfg.fg, contrast = cfg.contrast;
+    var effFg = effectiveFg(fgBase, bg, state.mode, contrast);
+    var d = derive(effFg, bg, state.mode);
+
+    preview.style.setProperty("--bg", bg);
+    preview.style.setProperty("--accent", accent);
+    preview.style.setProperty("--fg", effFg);
+    preview.style.setProperty("--fg2", d.fg2);
+    preview.style.setProperty("--fg3", d.fg3);
+    preview.style.setProperty("--layer1", d.layer1);
+    preview.style.setProperty("--layer2", d.layer2);
+    preview.style.setProperty("--border", d.border);
+    preview.style.setProperty("--on-accent", d.onAccent);
+
+    document.getElementById("accent").value = accent;
+    document.getElementById("bg").value = bg;
+    document.getElementById("fg").value = fgBase;
+    document.getElementById("contrast").value = contrast;
+    document.getElementById("accentDot").style.background = accent;
+    document.getElementById("bgDot").style.background = bg;
+    document.getElementById("fgDot").style.background = fgBase;
+    document.getElementById("accentHex").textContent = accent.toUpperCase();
+    document.getElementById("bgHex").textContent = bg.toUpperCase();
+    document.getElementById("fgHex").textContent = fgBase.toUpperCase();
+    document.getElementById("contrastVal").textContent = contrast;
+    document.getElementById("tagContrast").textContent = contrast;
+    document.getElementById("currentTheme").textContent = "当前主题：" + (state.mode === "dark" ? "深色" : "浅色");
+    document.getElementById("contrast").style.setProperty("--fill", contrast + "%");
+  }
+
+  function setField(field, value) {
+    state[state.mode][field] = value;
+    render();
+  }
+
+  function loadMode(mode) {
+    state.mode = mode;
+    var seg = document.getElementById("themeSeg");
+    Array.prototype.forEach.call(seg.querySelectorAll("button"), function (b) {
+      b.setAttribute("aria-pressed", b.dataset.mode === mode ? "true" : "false");
+    });
+    render();
+  }
+
+  /* --- events --- */
+  document.getElementById("themeSeg").addEventListener("click", function (e) {
+    var btn = e.target.closest("button"); if (!btn) return;
+    loadMode(btn.dataset.mode);
+  });
+  document.getElementById("accent").addEventListener("input", function (e) { setField("accent", e.target.value); });
+  document.getElementById("bg").addEventListener("input", function (e) { setField("bg", e.target.value); });
+  document.getElementById("fg").addEventListener("input", function (e) { setField("fg", e.target.value); });
+  document.getElementById("contrast").addEventListener("input", function (e) { setField("contrast", Number(e.target.value)); });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".preset"), function (b) {
+    b.addEventListener("click", function () {
+      state[b.dataset.mode] = Object.assign({}, DEFAULTS[b.dataset.mode]);
+      render();
+    });
+  });
+
+  loadMode("light");
+})();
+</script>
+</body>
+</html>
