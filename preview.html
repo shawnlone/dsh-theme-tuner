@@ -484,10 +484,10 @@
     var d = derive(effFg, bg, state.mode);
     var bgT = bg;
     if (grad !== 0) {
-      var shift = 0.5 * clamp(Math.abs(grad) / 100, 0, 1);
+      var shift = 0.4 * clamp(Math.abs(grad) / 100, 0, 1);
       var top = grad > 0 ? mixHsl(bg, "#FFFFFF", shift) : mixHsl(bg, "#000000", shift);
       var bottom = grad > 0 ? mixHsl(bg, "#000000", shift) : mixHsl(bg, "#FFFFFF", shift);
-      bgT = "linear-gradient(180deg," + top + " 0%," + bg + " 50%," + bottom + " 100%)";
+      bgT = "linear-gradient(180deg," + top + " 0%," + bottom + " 100%)";
     }
 
     preview.style.setProperty("--bg", bgT);
