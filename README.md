@@ -6,7 +6,13 @@
 
 > 复用「外观」自带的 **浅色 / 深色 / 跟随系统** 切换，无需重复的切换按钮。
 
-![dsh-theme-tuner 在 DSH 设置里](assets/screenshot.png)
+## 效果
+
+| ![深色 · 蓝灰](assets/screenshot_01.png) | ![深色 · 紫褐](assets/screenshot_02.png) |
+| --- | --- |
+| 深色 · 蓝灰 | 深色 · 紫褐 |
+| ![深色 · 蓝色渐变](assets/screenshot_03.png) | ![深色 · 绿色渐变](assets/screenshot_04.png) |
+| 深色 · 蓝色渐变 | 深色 · 绿色渐变 |
 
 ## 功能
 

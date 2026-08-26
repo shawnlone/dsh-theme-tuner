@@ -6,7 +6,13 @@ Customize the DeepSeek Harness (DSH) interface theme directly under the built-in
 
 > Reuses the built-in Appearance **light / dark / system** switch, so there is no duplicate theme toggle.
 
-![dsh-theme-tuner in DSH settings](assets/screenshot_en.png)
+## Screenshots
+
+| ![Dark · blue-grey](assets/screenshot_01.png) | ![Dark · purple](assets/screenshot_02.png) |
+| --- | --- |
+| Dark · blue-grey | Dark · purple |
+| ![Dark · blue + gradient](assets/screenshot_03.png) | ![Dark · green + gradient](assets/screenshot_04.png) |
+| Dark · blue + gradient | Dark · green + gradient |
 
 ## Features
 

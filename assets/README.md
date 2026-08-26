@@ -9,8 +9,10 @@ Add one or more PNG screenshots here and reference them in the market's
 ```jsonc
 {
   "https://github.com/shawnlone/dsh-theme-tuner": [
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_en.png"
+    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_01.png",
+    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_02.png",
+    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_03.png",
+    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_04.png"
   ]
 }
 ```
@@ -24,9 +26,13 @@ Rules (from the market's contributing guide):
 - No screenshots? The storefront falls back to extracting images from your
   README. A maintained entry here just gives you control over order & selection.
 
-Screenshots here:
+Screenshots here (all show the DSH settings page 外观 → 主题定制 in dark theme;
+the two READMEs share the same set of numbered images):
 
-- `screenshot.png` — the DSH settings page (Chinese UI) showing 外观 → 主题定制.
-- `screenshot_en.png` — the same settings page with the English UI.
-- `README.md` (Chinese) uses `screenshot.png`; `README_en.md` (English) uses
-  `screenshot_en.png`.
+- `screenshot_01.png` — dark · blue-grey accent (no gradient).
+- `screenshot_02.png` — dark · purple accent.
+- `screenshot_03.png` — dark · blue accent + gradient.
+- `screenshot_04.png` — dark · green accent + gradient.
+
+`README.md` (Chinese) and `README_en.md` (English) both reference these four
+numbered images, in this order.
