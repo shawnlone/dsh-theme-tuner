@@ -293,6 +293,14 @@
         </div>
       </div>
 
+      <div class="slider-row">
+        <span class="row-label">整体透明度</span>
+        <div class="slider-wrap">
+          <input type="range" id="opacity" min="0" max="100" value="0" />
+          <span class="slider-val" id="opacityVal">0</span>
+        </div>
+      </div>
+
       <p class="hint">
         对比度控制前景相对背景的“清晰程度”：
         值越大，文字越接近纯黑（浅色主题）/ 纯白（深色主题），可读性越强；
@@ -354,8 +362,8 @@
 
   /* Per-theme default palette (matches the reference screenshot). */
   var DEFAULTS = {
-    light: { accent: "#339CFF", bg: "#FFFFFF", fg: "#1A1C1F", contrast: 45 },
-    dark:  { accent: "#2D99FF", bg: "#262626", fg: "#D1D1D1", contrast: 28 }
+    light: { accent: "#339CFF", bg: "#FFFFFF", fg: "#1A1C1F", contrast: 45, opacity: 0 },
+    dark:  { accent: "#2D99FF", bg: "#262626", fg: "#D1D1D1", contrast: 28, opacity: 0 }
   };
 
   /* ------------------------- color utilities ------------------------- */
@@ -460,6 +468,11 @@
   }
   function accentEl() { return state[state.mode].accent; }
 
+  function withAlpha(hex, alpha) {
+    var c = hexToRgb(hex);
+    return "rgba(" + c.r + "," + c.g + "," + c.b + "," + Math.round(clamp(alpha, 0, 1) * 100) / 100 + ")";
+  }
+
   function luminance(hex) {
     var c = hexToRgb(hex);
     var f = function (v) {
@@ -471,17 +484,21 @@
 
   function render() {
     var cfg = state[state.mode];
-    var accent = cfg.accent, bg = cfg.bg, fgBase = cfg.fg, contrast = cfg.contrast;
+    var accent = cfg.accent, bg = cfg.bg, fgBase = cfg.fg, contrast = cfg.contrast, opacity = cfg.opacity || 0;
     var effFg = effectiveFg(fgBase, bg, state.mode, contrast);
     var d = derive(effFg, bg, state.mode);
+    var a = clamp(1 - opacity / 100, 0.3, 1);
+    var layer1 = opacity > 0 ? withAlpha(d.layer1, a) : d.layer1;
+    var layer2 = opacity > 0 ? withAlpha(d.layer2, a) : d.layer2;
+    var bgT = opacity > 0 ? withAlpha(bg, a) : bg;
 
-    preview.style.setProperty("--bg", bg);
+    preview.style.setProperty("--bg", bgT);
     preview.style.setProperty("--accent", accent);
     preview.style.setProperty("--fg", effFg);
     preview.style.setProperty("--fg2", d.fg2);
     preview.style.setProperty("--fg3", d.fg3);
-    preview.style.setProperty("--layer1", d.layer1);
-    preview.style.setProperty("--layer2", d.layer2);
+    preview.style.setProperty("--layer1", layer1);
+    preview.style.setProperty("--layer2", layer2);
     preview.style.setProperty("--border", d.border);
     preview.style.setProperty("--on-accent", d.onAccent);
 
@@ -489,6 +506,7 @@
     document.getElementById("bg").value = bg;
     document.getElementById("fg").value = fgBase;
     document.getElementById("contrast").value = contrast;
+    document.getElementById("opacity").value = opacity;
     document.getElementById("accentDot").style.background = accent;
     document.getElementById("bgDot").style.background = bg;
     document.getElementById("fgDot").style.background = fgBase;
@@ -496,6 +514,7 @@
     document.getElementById("bgHex").textContent = bg.toUpperCase();
     document.getElementById("fgHex").textContent = fgBase.toUpperCase();
     document.getElementById("contrastVal").textContent = contrast;
+    document.getElementById("opacityVal").textContent = opacity;
     document.getElementById("tagContrast").textContent = contrast;
     document.getElementById("contrast").style.setProperty("--fill", contrast + "%");
   }
@@ -523,6 +542,7 @@
   document.getElementById("bg").addEventListener("input", function (e) { setField("bg", e.target.value); });
   document.getElementById("fg").addEventListener("input", function (e) { setField("fg", e.target.value); });
   document.getElementById("contrast").addEventListener("input", function (e) { setField("contrast", Number(e.target.value)); });
+document.getElementById("opacity").addEventListener("input", function (e) { setField("opacity", Number(e.target.value)); });
 
   Array.prototype.forEach.call(document.querySelectorAll(".preset"), function (b) {
     b.addEventListener("click", function () {
