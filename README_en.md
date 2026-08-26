@@ -2,21 +2,19 @@
 
 > [Chinese README](README.md)
 
-Customize the DeepSeek Harness (DSH) interface theme directly under the built-in **Appearance** settings — accent, background, foreground and contrast, applied live.
+Customize the DeepSeek Harness (DSH) interface theme directly under the built-in **Appearance** settings — accent, background, foreground, contrast and gradient, applied live.
 
 > Reuses the built-in Appearance **light / dark / system** switch, so there is no duplicate theme toggle.
 
 ## Screenshots
 
-| ![Dark · blue-grey](assets/screenshot_01.png) | ![Dark · purple](assets/screenshot_02.png) |
-| --- | --- |
-| Dark · blue-grey | Dark · purple |
-| ![Dark · blue + gradient](assets/screenshot_03.png) | ![Dark · green + gradient](assets/screenshot_04.png) |
-| Dark · blue + gradient | Dark · green + gradient |
+| ![Dark theme effect](assets/screenshot_01.png)<br>Dark · theme effect | ![Dark theme effect](assets/screenshot_02.png)<br>Dark · theme effect | ![Dark theme effect](assets/screenshot_03.png)<br>Dark · theme effect |
+| --- | --- | --- |
+| ![Dark theme effect](assets/screenshot_04.png)<br>Dark · theme effect | ![Light theme effect](assets/screenshot_05.png)<br>Light · theme effect | ![Theme settings panel](assets/screenshot_06.jpg)<br>Theme settings panel |
 
 ## Features
 
-- Sits directly under **General Settings → Appearance**, adjusting **accent / background / foreground / contrast**.
+- Sits directly under **General Settings → Appearance**, adjusting **accent / background / foreground / contrast / gradient**.
 - Reuses the built-in Appearance light / dark / system switch and tunes the **currently active** theme.
 - Keeps the light and dark palettes **separately**; the contrast slider softens or sharpens the foreground text per theme.
 - Applies **live** via DSH `theme.overrideTokens` (`--dsw-alias-*` design tokens), with a one-click **reset to the current theme default**.
