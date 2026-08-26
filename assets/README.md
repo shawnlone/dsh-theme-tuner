@@ -14,7 +14,7 @@ Add one or more PNG screenshots here and reference them in the market's
     "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_03.png",
     "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_04.png",
     "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_05.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_06.jpg"
+    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_06.png"
   ]
 }
 ```
@@ -36,7 +36,7 @@ Screenshots here (both READMEs share the same set of numbered images;
 - `screenshot_03.png` — dark theme effect.
 - `screenshot_04.png` — dark theme effect.
 - `screenshot_05.png` — light theme effect.
-- `screenshot_06.jpg` — the theme adjustment panel (外观 → 主题定制).
+- `screenshot_06.png` — the theme adjustment panel (外观 → 主题定制).
 
 `README.md` (Chinese) and `README_en.md` (English) both reference these six
 images, in this order.

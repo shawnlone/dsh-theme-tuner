@@ -10,7 +10,7 @@ Customize the DeepSeek Harness (DSH) interface theme directly under the built-in
 
 | ![Dark theme effect](assets/screenshot_01.png)<br>Dark · theme effect | ![Dark theme effect](assets/screenshot_02.png)<br>Dark · theme effect | ![Dark theme effect](assets/screenshot_03.png)<br>Dark · theme effect |
 | --- | --- | --- |
-| ![Dark theme effect](assets/screenshot_04.png)<br>Dark · theme effect | ![Light theme effect](assets/screenshot_05.png)<br>Light · theme effect | ![Theme settings panel](assets/screenshot_06.jpg)<br>Theme settings panel |
+| ![Dark theme effect](assets/screenshot_04.png)<br>Dark · theme effect | ![Light theme effect](assets/screenshot_05.png)<br>Light · theme effect | ![Theme settings panel](assets/screenshot_06.png)<br>Theme settings panel |
 
 ## Features
 

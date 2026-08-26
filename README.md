@@ -10,7 +10,7 @@
 
 | ![深色 · 主题效果](assets/screenshot_01.png)<br>深色 · 主题效果 | ![深色 · 主题效果](assets/screenshot_02.png)<br>深色 · 主题效果 | ![深色 · 主题效果](assets/screenshot_03.png)<br>深色 · 主题效果 |
 | --- | --- | --- |
-| ![深色 · 主题效果](assets/screenshot_04.png)<br>深色 · 主题效果 | ![浅色 · 主题效果](assets/screenshot_05.png)<br>浅色 · 主题效果 | ![主题调节面板](assets/screenshot_06.jpg)<br>主题调节面板 |
+| ![深色 · 主题效果](assets/screenshot_04.png)<br>深色 · 主题效果 | ![浅色 · 主题效果](assets/screenshot_05.png)<br>浅色 · 主题效果 | ![主题调节面板](assets/screenshot_06.png)<br>主题调节面板 |
 
 ## 功能
 
