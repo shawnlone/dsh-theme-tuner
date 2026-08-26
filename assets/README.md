@@ -3,30 +3,35 @@
 Storefront screenshots for the plugin market (the awesome-dsh-plugin index, which
 feeds in-app stores like `dsh-market`).
 
-Add one or more PNG screenshots here and reference them in the market's
-`data/screenshots.json` (keyed by this repo's GitHub URL):
+Declare them **in this repository** so you can update them without a pull
+request: add a `screenshots.json` next to `package.json` (this repo's root),
+listing 1–8 image paths relative to that file:
 
-```jsonc
-{
-  "https://github.com/shawnlone/dsh-theme-tuner": [
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_01.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_02.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_03.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_04.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_05.png",
-    "https://raw.githubusercontent.com/shawnlone/dsh-theme-tuner/main/assets/screenshot_06.png"
-  ]
-}
+```json
+[
+  "assets/screenshot_01.png",
+  "assets/screenshot_02.png",
+  "assets/screenshot_03.png",
+  "assets/screenshot_04.png",
+  "assets/screenshot_05.png",
+  "assets/screenshot_06.png"
+]
 ```
+
+It is already committed here — no change to the market's `data/screenshots.json`
+is needed or wanted (the market treats that file as a deprecated fallback and
+asks contributors not to add new keys to it).
 
 Rules (from the market's contributing guide):
 
-- Images must be **https URLs on GitHub hosting** — `raw.githubusercontent.com`
-  works fine once the file is committed to this repo.
-- Keep them under `assets/` so they stay in sync with releases.
 - 1–8 images; order = display order.
+- Paths are relative to `screenshots.json` and may not leave this plugin's
+  directory (no leading `/`, no `..`).
+- Absolute URLs are also accepted, but must be **https on GitHub hosting**
+  (`raw.githubusercontent.com`, `user-images.githubusercontent.com`,
+  `camo.githubusercontent.com`, `github.com` attachments).
 - No screenshots? The storefront falls back to extracting images from your
-  README. A maintained entry here just gives you control over order & selection.
+  README. Declaring them just gives you control over order & selection.
 
 Screenshots here (both READMEs share the same set of numbered images;
 `screenshot_01`–`05` are theme-look previews, `screenshot_06` is the settings panel):
