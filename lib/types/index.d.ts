@@ -4,6 +4,7 @@ export interface CustomizerFieldSchema {
   bg: string;
   fg: string;
   contrast: number;
+  gradient: number;
 }
 
 /** Host plugin body: registers the "theme-tuner" settings namespace. */

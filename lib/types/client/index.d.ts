@@ -3,7 +3,7 @@ export interface ThemeTunerProps {
   t: (key: string) => string;
   useStore: <T>(selector: (state: ThemeTunerState) => T) => T;
   setMode: (mode: "light" | "dark") => void;
-  setField: (field: "accent" | "bg" | "fg" | "contrast", value: string | number) => void;
+  setField: (field: "accent" | "bg" | "fg" | "contrast" | "gradient", value: string | number) => void;
   resetScheme: (scheme: "light" | "dark") => void;
 }
 
@@ -12,6 +12,7 @@ export interface CustomizerScheme {
   bg: string;
   fg: string;
   contrast: number;
+  gradient: number;
 }
 
 export interface ThemeTunerState {

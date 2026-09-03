@@ -36,7 +36,7 @@ The plugin writes your values into DSH's design tokens:
 - **background** → `--dsw-alias-bg-base` / `--dsw-alias-bg-layer-1/2/3` / `--dsw-specific-sidebar-fill`
 - **foreground** → `--dsw-alias-label-primary/secondary/tertiary` (derived from the chosen foreground + contrast)
 
-Settings persist through the `theme-tuner` settings namespace. The row registers into `settings.general.item` (order 15), directly under the built-in Appearance (order 10).
+Settings persist through the `theme-tuner` settings namespace. The row registers into `settings.general.item` (order 10.5), directly under the built-in Appearance (order 10). Since DSH 0.1.2-rc.1 the font-size row sits at order 11 and the conversation-display row at order 12, so 10.5 keeps the customizer pinned to the Appearance row.
 
 ## Structure
 
