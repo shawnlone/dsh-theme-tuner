@@ -38,13 +38,36 @@ The plugin writes your values into DSH's design tokens:
 
 Settings persist through the `theme-tuner` settings namespace. The row registers into `settings.general.item` (order 10.5), directly under the built-in Appearance (order 10). Since DSH 0.1.2-rc.1 the font-size row sits at order 11 and the conversation-display row at order 12, so 10.5 keeps the customizer pinned to the Appearance row.
 
+### DSH version support
+
+One artifact serves both settings generations:
+
+| DSH | Settings seam | Durable schema |
+| --- | --- | --- |
+| `0.2.x` | `ctx.configForms.get("theme-tuner")` | the exported `Config` (fields marked `.volatile()`) |
+| `<= 0.1.x` | `ctx.settingsScope.bind({ namespace: "theme-tuner" })` | `settings.register("theme-tuner", schema)` |
+
+Either way the namespace **is** the profile entry id `theme-tuner` declared in
+`cordis.patch.yml`, and the stored shape is `{ light: {...}, dark: {...} }`.
+
+DSH 0.2.0 also enforces plugin compatibility at install time: a bundle whose
+`@deepseek-ai/dsh*` peers do not admit the running runtime is refused outright
+(`Plugin ... is incompatible with dsh ...`). Those peers therefore span
+`>=0.1.1-rc.2 <0.3.0`.
+
+> If the row is missing after an upgrade, check the profile before the plugin:
+> `dsh-theme-tuner` must be listed in `dsh.profile.bundles` of
+> `$DSH_HOME/profiles/web/package.json` and must not appear in
+> `$DSH_HOME/profiles/web/disabled-plugins.json`. `scripts/install.ps1` /
+> `scripts/install.sh` re-assert the bundle entry for you.
+
 ## Structure
 
 ```
 dsh-theme-tuner/
   package.json          # dual-face manifest: dsh.client + dsh.bundle.patch
-  cordis.patch.yml      # bundle mount row (insert)
-  lib/index.js          # host half: registers the theme-tuner settings namespace + schema
+  cordis.patch.yml      # bundle mount row (insert); its id IS the settings namespace
+  lib/index.js          # host half: exports the Config schema + wires the settings seam
   lib/client.js         # browser half: settings row + live token application
   scripts/              # install.ps1 / install.sh
   preview.html          # standalone demo

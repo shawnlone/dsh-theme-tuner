@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.1.3
+
+Compatibility release for DSH **0.2.0-rc.1** (and 0.1.5-rc.2), whose settings
+seam and plugin manifest rules both changed.
+
+- **Install was blocked, not just broken.** DSH 0.2.0 evaluates every
+  `@deepseek-ai/dsh` / `@deepseek-ai/dsh-*` peer of a profile bundle against the
+  running runtime and refuses the whole bundle when one is unsatisfied
+  (`dsh: installation rejected: Plugin dsh-theme-tuner@0.1.2 is incompatible
+  with dsh 0.2.0-rc.1: peerDependencies {...}`). All DSH peers are now
+  `>=0.1.1-rc.2 <0.3.0`, which admits every published 0.1.x and 0.2.x runtime.
+- **Client: the settings service was renamed.** DSH 0.2.0 replaced
+  `settingsScope` with `configForms`, and a form is now addressed by the Host
+  profile entry id rather than by an arbitrary namespace. The client resolves
+  whichever service the runtime has (`configForms.get("theme-tuner")` on 0.2.x,
+  `settingsScope.bind({ namespace: "theme-tuner" })` before it); both expose the
+  same `getSnapshot` / `subscribe` / `set` / `unset` / `mutate` contract.
+- **Client inject list.** `settingsScope` is deliberately no longer an injected
+  dependency, because naming either generation's service would leave the entry
+  permanently *pending* on the other. `theme` transitively guarantees the seam:
+  ui-theme only provides it after acquiring the settings service itself.
+- **Host: the durable schema is now the plugin's `Config`.** DSH 0.2.0 derives
+  each entry's settings form from the Cordis `Config` schema, projecting the
+  fields marked `.volatile()`; `settings.register(ns, schema)` is gone. The host
+  half exports `Config` (`light` / `dark`, each a volatile palette object) and
+  tells the service this entry owns a hand-written page via
+  `settings.configure({ auto: false }, ctx.fiber)`. On DSH <= 0.1.x it still
+  registers the legacy non-volatile namespace, so one artifact serves both.
+- **Dependency:** `@deepseek-ai/schemastery` `^3.18.1` → `^3.18.4`, the first
+  build with `.volatile()`.
+- Docs: notes that the plugin's settings namespace **is** the profile entry id
+  `theme-tuner` from `cordis.patch.yml`, and that a profile which lost that
+  bundle entry (or has the plugin marked disabled) must be repaired before the
+  row reappears.
+
 ## 0.1.2
 
 Dual-compatibility: the plugin now runs on both the pre-split and the

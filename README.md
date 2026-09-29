@@ -38,13 +38,28 @@ dsh plugin --profile web add github:shawnlone/dsh-theme-tuner
 
 设置经 `theme-tuner` 命名空间持久化；设置行注册到 `settings.general.item`（order 10.5），排在「外观」（order 10）正下方（DSH 0.1.2-rc.1 起新增的「字号大小」在 order 11、「对话显示」在 order 12，故用 10.5 保持紧贴外观）。
 
+### DSH 版本支持
+
+同一份产物同时适配两代设置层：
+
+| DSH | 设置服务 | 持久化结构 |
+| --- | --- | --- |
+| `0.2.x` | `ctx.configForms.get("theme-tuner")` | 导出的 `Config`（字段标记 `.volatile()`） |
+| `<= 0.1.x` | `ctx.settingsScope.bind({ namespace: "theme-tuner" })` | `settings.register("theme-tuner", schema)` |
+
+两种情况下命名空间**就是** `cordis.patch.yml` 里声明的 profile 条目 id `theme-tuner`，存储结构为 `{ light: {...}, dark: {...} }`。
+
+DSH 0.2.0 起还会在**安装时**校验插件兼容性：如果某个 bundle 的 `@deepseek-ai/dsh*` peer 范围不覆盖当前运行时，安装会被直接拒绝（`Plugin ... is incompatible with dsh ...`）。因此这里的 peer 范围放宽到 `>=0.1.1-rc.2 <0.3.0`。
+
+> 升级后如果设置行没出现，先检查 profile 而不是插件：`dsh-theme-tuner` 必须出现在 `$DSH_HOME/profiles/web/package.json` 的 `dsh.profile.bundles` 中，并且不能出现在 `$DSH_HOME/profiles/web/disabled-plugins.json` 里。`scripts/install.ps1` / `scripts/install.sh` 会自动补回该 bundle 条目。
+
 ## 目录结构
 
 ```
 dsh-theme-tuner/
   package.json          # 双面插件清单：dsh.client + dsh.bundle.patch
-  cordis.patch.yml      # bundle 挂载行 (insert)
-  lib/index.js          # 主机半区：注册 theme-tuner 设置命名空间 + schema
+  cordis.patch.yml      # bundle 挂载行 (insert)；其 id 即设置命名空间
+  lib/index.js          # 主机半区：导出 Config schema 并挂接设置层
   lib/client.js         # 浏览器半区：设置行 UI + 实时 token 应用
   scripts/              # install.ps1 / install.sh
   preview.html          # 独立效果演示
