@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-tuner",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "DSH web plugin: theme customization placed under the built-in Appearance (外观) settings. It reuses the Appearance light/dark switch and lets you adjust accent / background / foreground / contrast for the active theme, applied live through DSH theme token overrides. Supports the DSH 0.2.x settings/Config form model and the 0.1.x settingsScope model.",
   "type": "module",
   "main": "lib/index.js",

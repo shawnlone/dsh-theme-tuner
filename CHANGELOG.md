@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.1.4
+
+Layout fix for the DSH 0.2.x settings panel.
+
+- **The colour row no longer overflows the settings content column.** DSH 0.2.x
+  gives `settings.general.item` a narrower column than 0.1.x, and the three
+  swatches were rigid (`flex: 0 0 156px`). Each one overflowed its own cell and
+  — being `position: relative` — painted *over* the next cell's label, so 背景 /
+  前景 vanished and the third swatch was clipped at the dialog edge.
+- The three colours are now a self-fitting grid
+  (`repeat(auto-fit, minmax(138px, 150px))`, wrapping to fewer columns instead of
+  overflowing) with each label **stacked above** its swatch, so no locale's
+  label can squeeze the hex value away; the hex ellipsizes only as a last
+  resort.
+- **Each rounded group is capped instead of stretched.** The track has a max, so
+  a swatch stops at 150px rather than spanning the column, and
+  `justify-content: space-between` spends the leftover on the gaps — roughly
+  36px of clear air between neighbours at the default panel width, where the old
+  full-width tracks sat ~14px apart and read as one continuous bar.
+- Slider rows gained the same `min-width: 0` shrink chain, and the section now
+  follows the shell's own row rhythm (`.5px` `--dsw-alias-border-l2` hairline,
+  `16px 0` padding) so it reads as a native neighbour of the Appearance group.
+
 ## 0.1.3
 
 Compatibility release for DSH **0.2.0-rc.1** (and 0.1.5-rc.2), whose settings
